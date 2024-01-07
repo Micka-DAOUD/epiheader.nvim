@@ -1,7 +1,5 @@
 " autoload/epitech.vim
 "
-" made by x4m3, customized by MCK
-
 " dictionary of the comments styles for supported languages
 " 1: first line
 " 2: middle lines
@@ -26,6 +24,22 @@ function! s:GetCurrentYear()
 	return currentYear
 endfunction
 
+" function to prompt user for file description
+function! s:InputFileDescription()
+	" call inputsave() to prompt user for input
+	" call inputrestore() to finish user prompt
+
+	call inputsave()
+	let file_description = input('Enter file description: ')
+	call inputrestore()
+	" if the length of the input is null
+	if strlen(file_description) == 0
+		let currentSecond = strftime('%S') / 2
+		let file_description = " Epitech project file"
+	endif
+	return file_description
+endfunction
+
 " function to insert the epitech header
 function epitech#addHeader()
 	" if checkFiletype() fails, return error
@@ -42,7 +56,7 @@ function epitech#addHeader()
 	let l:let = append(1, l:com2 . " EPITECH PROJECT, " . s:GetCurrentYear())
 	let l:let = append(2, l:com2 . " Created by Micka DAOUD" )
 	let l:let = append(3, l:com2 . " File description:")
-	let l:let = append(4, l:com2 . vim.api.nvim_buf_get_name(0))
+	let l:let = append(4, l:com2 . s:InputFileDescription())
 	let l:let = append(5, l:com3)
 	let l:let = append(6, "")
 	:8

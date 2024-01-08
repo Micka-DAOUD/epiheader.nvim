@@ -35,7 +35,7 @@ function! s:InputFileDescription()
 	" if the length of the input is null
 	if strlen(file_description) == 0
 		let currentSecond = strftime('%S') / 2
-		let file_description = " Epitech project file"
+		let file_description = "Epitech project file"
 	endif
 	return file_description
 endfunction

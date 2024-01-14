@@ -35,7 +35,7 @@ function M.insert_header()
         vim.fn.append(6, "")
 
         local bufname = vim.fn.bufname()
-        if extension == 'cpp' and (vim.fn.match(bufname, "%.hpp$") > 0 or vim.fn.match(bufname, "%.h$") > 0) then
+        if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
             local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
 
             vim.fn.append(7, "#ifndef " .. include_guard)

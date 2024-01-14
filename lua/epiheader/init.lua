@@ -40,8 +40,6 @@ function M.insert_header()
 
             vim.fn.append(7, "#ifndef " .. include_guard)
             vim.fn.append(8, "    #define " .. include_guard)
-            local totalLines = vim.fn.line("$")
-            vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
 
             if vim.fn.match(bufname, ".hpp$") > 0 then
                 local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
@@ -49,9 +47,16 @@ function M.insert_header()
                 if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
                     vim.fn.append(9, "")
                     vim.fn.append(10, "class " .. rawFilename .. " {")
-                    vim.fn.append(11, "\tprivate:\n\tpublic:\n}")
+                    vim.fn.append(11, "\tprivate:")
+                    vim.fn.append(12, "\tpublic:")
+                    vim.fn.append(13, "\t\t" .. rawFilename .. "();")
+                    vim.fn.append(14, "\t\t" .. "~" .. rawFilename .. "();")
+                    vim.fn.append(15, "}")
                 end
             end
+
+            local totalLines = vim.fn.line("$")
+            vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
         vim.print("Successfully generated " .. filename .. " header.")
     else

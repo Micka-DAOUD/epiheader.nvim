@@ -1,6 +1,7 @@
 
 -- header_template_commands.lua
 
+
 local M = {}
 
 local commentSymbols = {
@@ -33,15 +34,21 @@ function M.insert_header()
         vim.fn.append(5, commentSymbols[extension][3])
         vim.fn.append(6, "")
 
-        if extension == "hpp" or extension == "h" then
+        local bufname = vim.fn.bufname()
+        if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
             local totalLines = vim.fn.line("$")
             local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
             local include_guard = string.upper(rawFilename)
+            if (vim.fn.match(bufname, ".hpp$") > 0) then
+                include_guard = include_guard .. "_HPP_"
+            else
+                include_guard = include_guard .. "_H_"
+            end
             vim.fn.append(7, "#ifndef " .. include_guard)
             vim.fn.append(8, "    #define " .. include_guard)
             vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
-        vim.print("Successfully generated " .. filename .. " header." .. extension)
+        vim.print("Successfully generated " .. filename .. " header.")
     else
         error("Unknown extension: " .. extension)
     end

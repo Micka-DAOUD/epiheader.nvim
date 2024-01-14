@@ -49,12 +49,7 @@ function M.insert_header()
                 if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
                     vim.fn.append(9, "")
                     vim.fn.append(10, "class " .. rawFilename .. " {")
-                    vim.fn.append(11, [[
-                        private:
-                        public:
-                        }
-                    ]]
-                    )
+                    vim.fn.append(11, "\tprivate:\n\tpublic:\n}")
                 end
             end
         end

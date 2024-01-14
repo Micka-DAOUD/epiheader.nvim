@@ -51,7 +51,7 @@ function M.insert_header()
                     vim.fn.append(12, "\tpublic:")
                     vim.fn.append(13, "\t\t" .. rawFilename .. "();")
                     vim.fn.append(14, "\t\t" .. "~" .. rawFilename .. "();")
-                    vim.fn.append(15, "}")
+                    vim.fn.append(15, "};")
                 end
             end
 

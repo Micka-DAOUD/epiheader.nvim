@@ -8,7 +8,7 @@ local commentSymbols = {
     hpp = { "/*", "**", "*/" },
     c = { "/*", "**", "*/" },
     h = { "/*", "**", "*/" },
-    hs = { "{-", "--", "-}" },
+    haskell = { "{-", "--", "-}" },
 }
 
 function M.insert_header()
@@ -19,7 +19,6 @@ function M.insert_header()
     local date = os.date("%Y")
     local user = os.getenv("USER") or "myself"
 
-    print(extension)
     if commentSymbols[extension] then
         local fileDesc = vim.fn.input("File description: ")
         if fileDesc == "" then
@@ -42,7 +41,9 @@ function M.insert_header()
             vim.fn.append(8, "    #define " .. include_guard)
             vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
-        vim.print("Successfully generated " .. filename .. " header.")
+        vim.print("Successfully generated " .. filename .. " header." .. extension)
+    else
+        error("Unknown extension: " .. extension)
     end
 end
 

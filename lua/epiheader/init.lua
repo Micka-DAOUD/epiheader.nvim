@@ -45,7 +45,7 @@ function M.insert_header()
 
             if vim.fn.match(bufname, ".hpp$") > 0 then
                 local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
-                local addClass = input("Create class " .. rawFilename .. "? (Y/n)")
+                local addClass = vim.fn.input("Create class " .. rawFilename .. "? (Y/n)")
                 if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
                     vim.fn.append(9, "")
                     vim.fn.append(10, "class " .. rawFilename .. " {")

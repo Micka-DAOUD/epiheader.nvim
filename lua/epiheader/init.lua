@@ -19,6 +19,7 @@ function M.insert_header()
     local date = os.date("%Y")
     local user = os.getenv("USER") or "myself"
 
+    print(extension)
     if commentSymbols[extension] then
         local fileDesc = vim.fn.input("File description: ")
         if fileDesc == "" then

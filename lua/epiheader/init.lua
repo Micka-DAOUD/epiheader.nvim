@@ -25,12 +25,12 @@ function M.insert_header()
             fileDesc = filename
         end
 
-        vim.fn.append(0, commentSymbols[extension][0]);
-        vim.fn.append(1, commentSymbols[extension][1] .. " EPITECH PROJECT, " .. date)
-        vim.fn.append(2, commentSymbols[extension][1] .. " Created by " .. user)
-        vim.fn.append(3, commentSymbols[extension][1] .. " File description:")
-        vim.fn.append(4, commentSymbols[extension][1] .. " " .. fileDesc)
-        vim.fn.append(5, commentSymbols[extension][2])
+        vim.fn.append(0, commentSymbols[extension][1]);
+        vim.fn.append(1, commentSymbols[extension][2] .. " EPITECH PROJECT, " .. date)
+        vim.fn.append(2, commentSymbols[extension][2] .. " Created by " .. user)
+        vim.fn.append(3, commentSymbols[extension][2] .. " File description:")
+        vim.fn.append(4, commentSymbols[extension][2] .. " " .. fileDesc)
+        vim.fn.append(5, commentSymbols[extension][3])
         vim.fn.append(6, "")
 
         if extension == "hpp" or extension == "h" then
@@ -41,6 +41,7 @@ function M.insert_header()
             vim.fn.append(8, "    #define " .. include_guard)
             vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
+        vim.print("Successfully generated " .. filename .. " header.")
     end
 end
 

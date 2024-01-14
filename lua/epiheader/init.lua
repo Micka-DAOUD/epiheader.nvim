@@ -39,7 +39,7 @@ function M.insert_header()
             local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
 
             vim.fn.append(7, "#ifndef " .. include_guard)
-            vim.fn.append(8, "    #define " .. include_guard)
+            vim.fn.append(8, "\t#define " .. include_guard)
 
             if vim.fn.match(bufname, ".hpp$") > 0 then
                 local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')

@@ -36,16 +36,11 @@ function M.insert_header()
 
         local bufname = vim.fn.bufname()
         if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
-            local totalLines = vim.fn.line("$")
-            local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
-            local include_guard = string.upper(rawFilename)
-            if (vim.fn.match(bufname, ".hpp$") > 0) then
-                include_guard = include_guard .. "_HPP_"
-            else
-                include_guard = include_guard .. "_H_"
-            end
+            local include_guard = string.upper(string.gsub(filename, ".", "_")) .. "_"
+
             vim.fn.append(7, "#ifndef " .. include_guard)
             vim.fn.append(8, "    #define " .. include_guard)
+            local totalLines = vim.fn.line("$")
             vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
         vim.print("Successfully generated " .. filename .. " header.")

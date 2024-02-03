@@ -30,7 +30,7 @@ function M.insert_header()
 
         vim.fn.append(0, commentSymbols[extension][1]);
         vim.fn.append(1, commentSymbols[extension][2] .. " EPITECH PROJECT, " .. date)
-        vim.fn.append(2, commentSymbols[extension][2] .. " Created by ethan")
+        vim.fn.append(2, commentSymbols[extension][2] .. " Created by " .. user)
         vim.fn.append(3, commentSymbols[extension][2] .. " File description:")
         vim.fn.append(4, commentSymbols[extension][2] .. " " .. fileDesc)
         vim.fn.append(5, commentSymbols[extension][3])

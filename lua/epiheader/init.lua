@@ -11,6 +11,7 @@ local commentSymbols = {
     h = { "/*", "**", "*/" },
     hs = { "{-", "--", "-}" },
     haskell = { "{-", "--", "-}" },
+    make = { "##", "##", "##" },
 }
 
 function M.insert_header()

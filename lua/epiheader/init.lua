@@ -14,7 +14,7 @@ local commentSymbols = {
     make = { "##", "##", "##" },
 }
 
-local function getHeaderComment(extensionComment, fileDescription)
+function M.getHeaderComment(extensionComment, fileDescription)
     local date = os.date("%Y")
     local user = os.getenv("USER") or "myself"
     return {
@@ -27,7 +27,7 @@ local function getHeaderComment(extensionComment, fileDescription)
     }
 end
 
-local function getTextToAdd(extension, fileDescription)
+function M.getTextToAdd(extension, fileDescription)
     local bufname = vim.fn.bufname()
     local filename = vim.fn.fnamemodify(bufname, ':t')
     local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"

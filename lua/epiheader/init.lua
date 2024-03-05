@@ -14,7 +14,7 @@ local commentSymbols = {
     make = { "##", "##", "##" },
 }
 
-function M.getHeaderComment(extensionComment, fileDescription)
+local function getHeaderComment(extensionComment, fileDescription)
     local date = os.date("%Y")
     local user = os.getenv("USER") or "myself"
     return {
@@ -27,32 +27,32 @@ function M.getHeaderComment(extensionComment, fileDescription)
     }
 end
 
-function M.getTextToAdd(extension, fileDescription)
+local function getTextToAdd(extension, fileDescription)
     local bufname = vim.fn.bufname()
     local filename = vim.fn.fnamemodify(bufname, ':t')
     local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
     local header = getHeaderComment(commentSymbols[extension], fileDescription)
-    header.insert("")
+    table.insert(header, "")
 
     if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
         if vim.fn.match(bufname, ".h$") then
-            header.insert("#ifndef " .. include_guard)
-            header.insert("\t#define " .. include_guard)
-            header.insert("")
+            table.insert(header, "#ifndef " .. include_guard)
+            table.insert(header, "\t#define " .. include_guard)
+            table.insert(header, "")
         else
-            header.insert("#pragma once")
-            header.insert("")
+            table.insert(header, "#pragma once")
+            table.insert(header, "")
 
             local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
             local addClass = vim.fn.input("Create class " .. rawFilename .. "? (Y/n)")
             vim.cmd("redraw!")
 
             if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
-                header.insert("class" .. rawFilename .. " {")
-                header.insert("public:")
-                header.insert("\t" .. rawFilename .. "();")
-                header.insert("\t~" .. rawFilename .. "() = deffault;")
-                header.insert("};")
+                table.insert(header, "class" .. rawFilename .. " {")
+                table.insert(header, "public:")
+                table.insert(header, "\t" .. rawFilename .. "();")
+                table.insert(header, "\t~" .. rawFilename .. "() = deffault;")
+                table.insert(header, "};")
             end
         end
     end
@@ -60,7 +60,7 @@ function M.getTextToAdd(extension, fileDescription)
 end
 
 
-function M.insert_header()
+function M.insertHeader()
     -- Get the current buffer number
     local extension = vim.fn.getbufvar(vim.fn.bufnr(), '&filetype')
     local filename = vim.fn.fnamemodify(vim.fn.bufname(), ':t')

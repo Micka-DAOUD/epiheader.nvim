@@ -38,7 +38,6 @@ local function getTextToAdd(extension, fileDescription)
         if vim.fn.match(bufname, ".h$") > 0 then
             table.insert(header, "#ifndef " .. include_guard)
             table.insert(header, "\t#define " .. include_guard)
-            table.insert(header, "")
         end
         if vim.fn.match(bufname, ".hpp$") > 0 then
             table.insert(header, "#pragma once")
@@ -49,10 +48,11 @@ local function getTextToAdd(extension, fileDescription)
             vim.cmd("redraw!")
 
             if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
-                table.insert(header, "class" .. rawFilename .. " {")
+                table.insert(header, "class " .. rawFilename .. " {")
                 table.insert(header, "public:")
                 table.insert(header, "\t" .. rawFilename .. "();")
-                table.insert(header, "\t~" .. rawFilename .. "() = deffault;")
+                table.insert(header, "\t~" .. rawFilename .. "() = default;")
+                table.insert(header, "private:")
                 table.insert(header, "};")
             end
         end

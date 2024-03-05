@@ -40,7 +40,7 @@ local function getTextToAdd(extension, fileDescription)
             table.insert(header, "\t#define " .. include_guard)
             table.insert(header, "")
         end
-        if vin.fn.match(bufname, ".hpp$" > 0) then
+        if vim.fn.match(bufname, ".hpp$" > 0) then
             table.insert(header, "#pragma once")
             table.insert(header, "")
 

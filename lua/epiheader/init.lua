@@ -14,58 +14,81 @@ local commentSymbols = {
     make = { "##", "##", "##" },
 }
 
-function M.insert_header()
-    -- Get the current buffer number
-    local bufnr = vim.fn.bufnr()
-    local extension = vim.fn.getbufvar(bufnr, '&filetype')
-    local filename = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
+local function getHeaderComment(extensionComment, fileDescription)
     local date = os.date("%Y")
     local user = os.getenv("USER") or "myself"
+    return {
+        extensionComment[1],
+        extensionComment[2] .. " EPITECH PROJECT, " .. date,
+        extensionComment[2] .. " Created by " .. user,
+        extensionComment[2] .. " File description:",
+        extensionComment[2] .. " " .. fileDescription,
+        extensionComment[3],
+    }
+end
 
-    if commentSymbols[extension] then
-        local fileDesc = vim.fn.input("File description: ")
-        vim.cmd("redraw!")
-        if fileDesc == "" then
-            fileDesc = filename
-        end
+local function getTextToAdd(extension, fileDescription)
+    local bufname = vim.fn.bufname()
+    local filename = vim.fn.fnamemodify(bufname, ':t')
+    local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
+    local header = getHeaderComment(commentSymbols[extension], fileDescription)
+    header.insert("")
 
-        vim.fn.append(0, commentSymbols[extension][1]);
-        vim.fn.append(1, commentSymbols[extension][2] .. " EPITECH PROJECT, " .. date)
-        vim.fn.append(2, commentSymbols[extension][2] .. " Created by " .. user)
-        vim.fn.append(3, commentSymbols[extension][2] .. " File description:")
-        vim.fn.append(4, commentSymbols[extension][2] .. " " .. fileDesc)
-        vim.fn.append(5, commentSymbols[extension][3])
-        vim.fn.append(6, "")
+    if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
+        if vim.fn.match(bufname, ".h$") then
+            header.insert("#ifndef " .. include_guard)
+            header.insert("\t#define " .. include_guard)
+            header.insert("")
+        else
+            header.insert("#pragma once")
+            header.insert("")
 
-        local bufname = vim.fn.bufname()
-        if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
-            local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
+            local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
+            local addClass = vim.fn.input("Create class " .. rawFilename .. "? (Y/n)")
+            vim.cmd("redraw!")
 
-            vim.fn.append(7, "#ifndef " .. include_guard)
-            vim.fn.append(8, "\t#define " .. include_guard)
-
-            if vim.fn.match(bufname, ".hpp$") > 0 then
-                local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
-                local addClass = vim.fn.input("Create class " .. rawFilename .. "? (Y/n)")
-                vim.cmd("redraw!")
-                if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
-                    vim.fn.append(9, "")
-                    vim.fn.append(10, "class " .. rawFilename .. " {")
-                    vim.fn.append(11, "private:")
-                    vim.fn.append(12, "public:")
-                    vim.fn.append(13, "\t" .. rawFilename .. "();")
-                    vim.fn.append(14, "\t" .. "~" .. rawFilename .. "() = default;")
-                    vim.fn.append(15, "};")
-                end
+            if (addClass ~= "n" and addClass ~= "N" and addClass ~= "no" and addClass ~= "NO") then
+                header.insert("class" .. rawFilename .. " {")
+                header.insert("public:")
+                header.insert("\t" .. rawFilename .. "();")
+                header.insert("\t~" .. rawFilename .. "() = deffault;")
+                header.insert("};")
             end
-
-            local totalLines = vim.fn.line("$")
-            vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
         end
-        vim.print("Successfully generated " .. filename .. " header.")
-    else
-        error("Unknown extension: " .. extension)
     end
+    return header
+end
+
+
+function M.insert_header()
+    -- Get the current buffer number
+    local extension = vim.fn.getbufvar(vim.fn.bufnr(), '&filetype')
+    local filename = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
+
+    if not commentSymbols[extension] then
+        error("Unknown extension: " .. extension)
+        return
+    end
+
+    local fileDescription = vim.fn.input("File description: ")
+    vim.cmd("redraw!")
+    if fileDescription == "" then
+        fileDescription = filename
+    end
+
+    local textToAdd = getTextToAdd(extension, fileDescription)
+
+    for i, line in ipairs(textToAdd) do
+        vim.fn.append(i - 1, line)
+    end
+
+    local bufname = vim.fn.bufname()
+    if extension == 'cpp' and vim.fn.match(bufname, ".h$") > 0 then
+        local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
+        local totalLines = vim.fn.line("$")
+        vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
+    end
+    vim.print("Successfully generated " .. filename .. " header.")
 end
 
 return M

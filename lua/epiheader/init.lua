@@ -35,11 +35,12 @@ local function getTextToAdd(extension, fileDescription)
     table.insert(header, "")
 
     if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
-        if vim.fn.match(bufname, ".h$") then
+        if vim.fn.match(bufname, ".h$") > 0 then
             table.insert(header, "#ifndef " .. include_guard)
             table.insert(header, "\t#define " .. include_guard)
             table.insert(header, "")
-        else
+        end
+        if vin.fn.match(bufname, ".hpp$" > 0 then
             table.insert(header, "#pragma once")
             table.insert(header, "")
 

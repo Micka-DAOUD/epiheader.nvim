@@ -35,14 +35,9 @@ local function getTextToAdd(extension, fileDescription)
     table.insert(header, "")
 
     if extension == 'cpp' and (vim.fn.match(bufname, ".hpp$") > 0 or vim.fn.match(bufname, ".h$") > 0) then
-        if vim.fn.match(bufname, ".h$") > 0 then
-            table.insert(header, "#ifndef " .. include_guard)
-            table.insert(header, "\t#define " .. include_guard)
-        end
+        table.insert(header, "#pragma once")
+        table.insert(header, "")
         if vim.fn.match(bufname, ".hpp$") > 0 then
-            table.insert(header, "#pragma once")
-            table.insert(header, "")
-
             local rawFilename = vim.fn.fnamemodify(vim.fn.bufname(), ':t:r')
             local addClass = vim.fn.input("Create class " .. rawFilename .. "? (Y/n)")
             vim.cmd("redraw!")
@@ -81,13 +76,6 @@ function M.insertHeader()
 
     for i, line in ipairs(textToAdd) do
         vim.fn.append(i - 1, line)
-    end
-
-    local bufname = vim.fn.bufname()
-    if extension == 'cpp' and vim.fn.match(bufname, ".h$") > 0 then
-        local include_guard = string.upper(string.gsub(filename, "%.", "_")) .. "_"
-        local totalLines = vim.fn.line("$")
-        vim.fn.append(totalLines, "#endif /* !" .. include_guard .. " */")
     end
     vim.print("Successfully generated " .. filename .. " header.")
 end
